@@ -12,6 +12,7 @@ public class EnigmaEmulator  extends JFrame {
     private JPanel rotorPanel = new JPanel();
     private JPanel ringPanel = new JPanel();
     private JPanel rotationPanel = new JPanel();
+    private JPanel plugBoardPanel = new JPanel();
     private JPanel entryPanel = new JPanel();
     private JPanel outputPanel = new JPanel();
 
@@ -37,6 +38,8 @@ public class EnigmaEmulator  extends JFrame {
     private JTextField messageEntry = new JTextField();
     private JButton encodeButton = new JButton("Encode");
 
+    private JTextField plugBoardEntry = new JTextField();
+
     private JLabel outputLabel = new JLabel("", SwingConstants.CENTER);
 
     private DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
@@ -47,7 +50,7 @@ public class EnigmaEmulator  extends JFrame {
         setBackground(new Color(60, 63, 65));
         setSize(800, 600);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3, 1));
+        setLayout(new GridLayout(4, 1));
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -62,6 +65,7 @@ public class EnigmaEmulator  extends JFrame {
         }
 
         setRotorPanel();
+        setPlugBoardPanel();
         setEntryPanel();
         setOutputPanel();
 
@@ -81,10 +85,12 @@ public class EnigmaEmulator  extends JFrame {
             String reflectorValue = reflectors.getSelectedItem().toString();
             String message = messageEntry.getText();
 
+            String plugBoardPairs = plugBoardEntry.getText().toString();
+
             encode(rotor3Value, rotation3Value, ring3Value,
                    rotor2Value, rotation2Value, ring2Value,
                    rotor1Value, rotation1Value, ring1Value,
-                   reflectorValue, message);
+                   reflectorValue, message, plugBoardPairs);
         });
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -231,6 +237,18 @@ public class EnigmaEmulator  extends JFrame {
         }
     }
 
+    private void setPlugBoardPanel() {
+        plugBoardPanel.setLayout(new GridLayout(2, 1));
+        plugBoardPanel.setBackground(new Color(187, 187, 187));
+
+        JLabel plugBoardLabel = new JLabel("Enter the plugboard pairs without spaces below (e.g. HGAJYT...)", SwingConstants.CENTER);
+        plugBoardLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        plugBoardPanel.add(plugBoardLabel);
+        plugBoardPanel.add(plugBoardEntry);
+
+        add(plugBoardPanel);
+    }
+
     private void setEntryPanel() {
         entryPanel.setLayout(new GridLayout(2, 1));
         entryPanel.setBackground(new Color(187, 187, 187));
@@ -261,12 +279,12 @@ public class EnigmaEmulator  extends JFrame {
     private void encode (String rotor3, String rotation3, String ring3,
                         String rotor2, String rotation2, String ring2,
                         String rotor1, String rotation1, String  ring1,
-                        String reflector, String message) {
+                        String reflector, String message, String plugBoardPairs) {
 
-        String command = String.format("python enigma.py %s %s %s %s %s %s %s %s %s %s %s", rotor3, rotation3, ring3,
+        String command = String.format("python enigma.py %s %s %s %s %s %s %s %s %s %s %s %s", rotor3, rotation3, ring3,
                                                                                             rotor2, rotation2, ring2,
                                                                                             rotor1, rotation1, ring1,
-                                                                                            reflector, message);
+                                                                                            reflector, message, plugBoardPairs);
 
         try {
             Process process = Runtime.getRuntime().exec(command);

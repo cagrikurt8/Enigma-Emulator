@@ -187,6 +187,25 @@ rotor_list = [rotor1, rotor2, rotor3]
 
 reflector = Rotor(args[10])
 
-enigma = Enigma(rotor_list, reflector)
+if len(args) == 13:
+    plugboard_pairs = args[12]
+    pair_list = list()
 
-print(enigma.encode_message(args[11]))
+    for idx in range(1, len(plugboard_pairs), 2):
+        pair = f"{plugboard_pairs[idx - 1]}{plugboard_pairs[idx]}"
+        pair_list.append(pair)
+
+    plug_board = Plugboard()
+
+    for pair in pair_list:
+        plug_lead = PlugLead(pair)
+        plug_board.add(plug_lead)
+    
+    enigma = Enigma(rotor_list, reflector, plug_board)
+
+    print(enigma.encode_message(args[11]))
+
+else:
+    enigma = Enigma(rotor_list, reflector)
+
+    print(enigma.encode_message(args[11]))
